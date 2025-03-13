@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.css">
+    <link rel="stylesheet" href="style.css">
+    <title>Criar Conta</title>
+</head>
+<body>
+    <div class="form-container">
+        <h2>CRIE SUA CONTA</h2>
+        <form id="registerForm">
+            <div class="form-group">
+                <label for="username"><i class="ri-user-line"></i> Nome de usuário</label>
+                <input type="text" id="username" placeholder="Insira seu nome de usuário" required>
+            </div>
+            <div class="form-group">
+                <label for="email"><i class="ri-mail-line"></i> E-mail</label>
+                <input type="email" id="email" placeholder="Insira seu e-mail" required>
+            </div>
+            <div class="form-group">
+                <label for="password"><i class="ri-lock-line"></i> Senha</label>
+                <input type="password" id="password" placeholder="Crie uma senha de 8 dígitos" minlength="8" required>
+            </div>
+            <div class="form-group">
+                <label for="confirm-password"><i class="ri-lock-password-line"></i> Confirme sua Senha</label>
+                <input type="password" id="confirm-password" placeholder="Confirme sua senha" minlength="8" required>
+            </div>
+            <button type="submit" class="submit-btn">Confirmar</button>
+        </form>
+    </div>
+
+    <div class="loader">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+    <script>
+        function getEmailFromURL() {
+            const params = new URLSearchParams(window.location.search);
+            return params.get('email') || '';
+        }
+        document.getElementById('email').value = getEmailFromURL();
+
+        function showloader() {
+            const loader = document.querySelector('.loader');
+            loader.style.display = 'flex';
+        }
+        function hideloader() {
+            const loader = document.querySelector('.loader');
+            loader.style.display = 'none';
+        }
+        // Configuração do Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyC91UQSzs6toXPaM24gno18DiqjIhhxyJU",
+            authDomain: "namibikibi.firebaseapp.com",
+            projectId: "namibikibi",
+            storageBucket: "namibikibi.appspot.com",
+            messagingSenderId: "465849394526",
+            appId: "1:465849394526:web:dd51ecca79230b83101bcf"
+        };
+
+        // Inicializar Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        console.log("Firebase inicializado!", app);
+
+        // Função para criar conta
+        document.getElementById('registerForm').addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const username = document.getElementById('username').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirm-password').value;
+
+            if (password !== confirmPassword) {
+                alert('As senhas não coincidem!');
+                return;
+            }
+
+            try {
+                // Criar usuário no Firebase Auth
+                const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+                const user = userCredential.user;
+
+                // Salvar usuário no Firestore
+                await db.collection('users').doc(user.uid).set({
+                    username: username,
+                    email: email,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                showloader()
+                setTimeout(() => {
+                    hideloader()
+                    alert('Conta criada com sucesso!')
+                }, 2500)
+            } catch (error) {
+                showloader()
+                setTimeout(() => {
+                    hideloader()
+                    alert('Erro ao criar conta. Tente novamente mais tarde.')
+                }, 2500)
+                console.error('Erro ao criar conta:', error);
+            }
+        });
+    </script>
+</body>
+</html>
