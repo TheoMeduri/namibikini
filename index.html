@@ -55,10 +55,56 @@
       font-weight: 500;
       text-decoration: none;
       transition: background-color 0.3s ease;
+      margin-bottom: 30px;
     }
 
     .button:hover {
       background-color: #084b91;
+    }
+
+    .steps {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    .step-circle {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background-color: #d4e4f5;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 6px;
+      font-weight: bold;
+      transition: background-color 0.3s;
+    }
+
+    .step.done .step-circle {
+      background-color: #0a66c2;
+    }
+
+    .step.current .step-circle {
+      background-color: #084b91;
+    }
+
+    .step-line {
+      width: 30px;
+      height: 2px;
+      background-color: #cbd5e1;
     }
 
     footer {
@@ -81,7 +127,31 @@
 <body>
   <main>
     <h1>Estamos quase prontos!</h1>
-    <p>O novo site da <strong>Nami Bikini</strong> está em fase final de construção. Em breve, uma experiência linda e completa para você curtir nossas coleções.</p>
+    <p>O novo site da <strong>Nami Bikini</strong> está em construção e muito em breve estará no ar.</p>
+
+    <!-- Etapas da construção -->
+    <div class="steps">
+      <div class="step done">
+        <div class="step-circle">1</div>
+        <span>Design</span>
+      </div>
+      <div class="step-line"></div>
+      <div class="step done">
+        <div class="step-circle">2</div>
+        <span>Catálogo</span>
+      </div>
+      <div class="step-line"></div>
+      <div class="step current">
+        <div class="step-circle">3</div>
+        <span>Pagamentos e Correios</span>
+      </div>
+      <div class="step-line"></div>
+      <div class="step">
+        <div class="step-circle">4</div>
+        <span>Entrega</span>
+      </div>
+    </div><br><br>
+
     <a href="mailto:websmedu@gmail.com" class="button">Fale com WebsMedu</a>
   </main>
   <footer>
